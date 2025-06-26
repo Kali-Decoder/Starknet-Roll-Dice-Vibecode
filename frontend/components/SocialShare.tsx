@@ -18,12 +18,12 @@ interface SocialShareProps {
 export default function SocialShare({ isWinner, selectedNumber, rolledNumber, betAmount, onClose }: SocialShareProps) {
   const [copied, setCopied] = useState(false);
 
-  const winMessage = `🎉 Just won $${betAmount * 5} on DiceForture! 🎲 Predicted ${selectedNumber} and rolled ${rolledNumber}! Lady Luck is on my side! 💰✨ #DiceForture #Winner #LuckyRoll`;
+  const winMessage = `🎉 Just won $${betAmount * 5} on DiceForture! 🎲 Predicted ${selectedNumber} and rolled ${rolledNumber}! Lady Luck is on my side! 💰✨ #DiceForture #LuckyRoll #Starknet #vibecoded @StarknetFndn`;
   
   const loseMessage = `😅 Just tried my luck on DiceForture! 🎲 Predicted ${selectedNumber} but rolled ${rolledNumber}. Sometimes you win, sometimes you learn! 🎯 Next roll will be mine! #DiceForture #GamingLife #NextTime`;
 
   const shareText = isWinner ? winMessage : loseMessage;
-  const shareUrl = 'https://dicefortune.com';
+  const shareUrl = 'https://starknet-roll-dice-vibecode.vercel.app/';
 
   const handleCopyLink = async () => {
     try {
