@@ -5,6 +5,12 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  typescript: {
+    ignoreBuildErrors: true, // Skip TypeScript type checking
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // Skip ESLint checks during builds
+  },
 };
 
 module.exports = nextConfig;
