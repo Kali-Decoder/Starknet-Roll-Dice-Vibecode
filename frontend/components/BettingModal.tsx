@@ -11,6 +11,9 @@ import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Play, Loader2, Trophy, X, Sha
 import DiceRoller from './DiceRoller';
 import ResultsDisplay from './ResultsDisplay';
 import SocialShare from './SocialShare';
+import { useAccount } from '@starknet-react/core';
+import { useDiceRollContract } from '@/hooks/useDiceRollContract';
+import { toast } from 'react-hot-toast';
 
 interface BettingModalProps {
   isOpen: boolean;
@@ -26,6 +29,13 @@ export default function BettingModal({ isOpen, onClose }: BettingModalProps) {
   const [rolledNumber, setRolledNumber] = useState<number | null>(null);
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [showShare, setShowShare] = useState(false);
+  const { account, isConnected } = useAccount();
+  const [connected, setConnected] = useState(false);
+  useEffect(() => {
+    setConnected(!!(isConnected && account));
+  }, [isConnected, account]);
+  const { playDiceRoll, lastResult } = useDiceRollContract(connected, account);
+  const [loading, setLoading] = useState(false);
 
   const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6];
 
@@ -43,21 +53,32 @@ export default function BettingModal({ isOpen, onClose }: BettingModalProps) {
     onClose();
   };
 
-  const handleRollDice = () => {
+  const handleRollDice = async () => {
     if (!selectedNumber || !betAmount) return;
-    
+    if (!connected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
     setGameState('rolling');
-    
-    // Simulate dice roll delay
-    setTimeout(() => {
-      const result = Math.floor(Math.random() * 6) + 1;
-      setRolledNumber(result);
-      setIsWinner(result === selectedNumber);
-      setGameState('result');
-    }, 3000);
+    setLoading(true);
+    try {
+      const betInWei = BigInt(betAmount) * BigInt(10 ** 18); // You may want to convert to wei if needed
+      const result = await playDiceRoll(selectedNumber, betInWei);
+      if (result) {
+        setRolledNumber(result.rolled);
+        setIsWinner(result.outcome === 1);
+        setGameState('result');
+      } else {
+        setGameState('betting');
+      }
+    } catch (err) {
+      setGameState('betting');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const canPlay = selectedNumber && betAmount && parseFloat(betAmount) > 0;
+  const canPlay = connected && selectedNumber && betAmount && parseFloat(betAmount) > 0 && !loading;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

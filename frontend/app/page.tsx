@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Sparkles, Trophy, Target } from 'lucide-react';
 import BettingModal from '@/components/BettingModal';
+import WalletConnectButton from '@/components/WalletConnectButton';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               DiceFortune
             </h1>
+            <div className="ml-4"><WalletConnectButton /></div>
           </div>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
             Test your luck with our premium dice betting experience. Predict, roll, and win big!
